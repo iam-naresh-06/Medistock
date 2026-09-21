@@ -35,7 +35,8 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (username, password) => {
     try {
-      const response = await axios.post('http://localhost:8080/api/auth/login', {
+      const apiBase = import.meta.env.VITE_API_BASE || 'http://localhost:8080/api';
+      const response = await axios.post(`${apiBase}/auth/login`, {
         username,
         password,
       });
