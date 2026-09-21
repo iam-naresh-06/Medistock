@@ -38,14 +38,18 @@ public class DataLoader implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) {
-        logger.info("⚡ [DataLoader] Verifying real-world medical store database items...");
+        try {
+            logger.info("⚡ [DataLoader] Verifying real-world medical store database items...");
 
-        seedUsers();
-        Map<String, Category> categories = seedCategories();
-        Map<String, Supplier> suppliers = seedSuppliers();
-        seedRealWorldMedicines(categories, suppliers);
+            seedUsers();
+            Map<String, Category> categories = seedCategories();
+            Map<String, Supplier> suppliers = seedSuppliers();
+            seedRealWorldMedicines(categories, suppliers);
 
-        logger.info("✓ [DataLoader] Database successfully primed with real-world medical store catalogue.");
+            logger.info("✓ [DataLoader] Database successfully primed with real-world medical store catalogue.");
+        } catch (Exception e) {
+            logger.error("⚠ [DataLoader] Non-fatal error during data seeding: {}", e.getMessage(), e);
+        }
     }
 
     private void seedUsers() {
