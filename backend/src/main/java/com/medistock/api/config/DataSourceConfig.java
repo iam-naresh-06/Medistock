@@ -47,15 +47,17 @@ public class DataSourceConfig {
                     // Construct standard JDBC PostgreSQL URL
                     jdbcUrl = "jdbc:postgresql://" + host + ":" + port + path;
 
-                    // Automatically extract username and password if present in the URI (user:pass@host)
-                    if (uri.getUserInfo() != null && user.isEmpty()) {
+                    // Automatically extract username and password from the URI (user:pass@host)
+                    if (uri.getUserInfo() != null && !uri.getUserInfo().isEmpty()) {
                         String[] userInfo = uri.getUserInfo().split(":", 2);
-                        user = userInfo[0];
-                        if (userInfo.length > 1 && pass.isEmpty()) {
+                        if (userInfo.length > 0 && !userInfo[0].isEmpty()) {
+                            user = userInfo[0];
+                        }
+                        if (userInfo.length > 1 && !userInfo[1].isEmpty()) {
                             pass = userInfo[1];
                         }
                     }
-                    logger.info("✓ Cloud PostgreSQL URL parsed: jdbc:postgresql://{}:{}{}", host, port, path);
+                    logger.info("✓ Cloud PostgreSQL URL parsed for user '{}': jdbc:postgresql://{}:{}{}", user, host, port, path);
                 } catch (Exception e) {
                     logger.warn("Could not parse DB URI, falling back with jdbc: prefix: {}", e.getMessage());
                     if (!jdbcUrl.startsWith("jdbc:")) {
